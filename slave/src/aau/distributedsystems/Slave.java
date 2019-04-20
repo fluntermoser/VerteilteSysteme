@@ -3,7 +3,6 @@ package aau.distributedsystems;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Slave {
@@ -22,13 +21,14 @@ public class Slave {
             DataInputStream din = new DataInputStream(s.getInputStream());
             DataOutputStream dout = new DataOutputStream(s.getOutputStream());
             System.out.println("Connected to server...");
-            String message="Hi server";
+            System.out.println("Waiting for Task...");
+
             String serverInput="";
             while(serverInput.equals("")){
-                dout.writeUTF(message);
-                dout.flush();
                 serverInput = din.readUTF();
-                System.out.println("Server says: "+serverInput);
+                System.out.println("Server says: " + serverInput);
+                dout.writeUTF("My task was: " + serverInput);
+                dout.flush();
             }
 
             dout.close();
