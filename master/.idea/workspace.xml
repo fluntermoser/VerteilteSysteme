@@ -15,8 +15,8 @@
       <file leaf-file-name="Master.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="117" column="104" lean-forward="false" selection-start-line="117" selection-start-column="104" selection-end-line="117" selection-end-column="104" />
+            <state relative-caret-position="126">
+              <caret line="17" column="117" lean-forward="false" selection-start-line="17" selection-start-column="117" selection-end-line="17" selection-end-column="117" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -351,12 +351,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1555745425316</updated>
-      <workItem from="1555745429282" duration="24254000" />
+      <workItem from="1555745429282" duration="25110000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24254000" />
+    <option name="totallyTimeSpent" value="25110000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="1" width="1934" height="1036" extended-state="0" />
@@ -402,14 +402,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java</url>
-          <line>117</line>
-          <properties />
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="10" />
     </breakpoint-manager>
     <watches-manager />
@@ -510,6 +502,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="20" column="31" lean-forward="false" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/ClientSocketWrapper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -528,20 +530,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="20" column="31" lean-forward="false" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="117" column="104" lean-forward="false" selection-start-line="117" selection-start-column="104" selection-end-line="117" selection-end-column="104" />
+        <state relative-caret-position="126">
+          <caret line="17" column="117" lean-forward="false" selection-start-line="17" selection-start-column="117" selection-end-line="17" selection-end-column="117" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

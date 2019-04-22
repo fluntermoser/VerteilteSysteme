@@ -15,13 +15,20 @@ public class Master {
     public static void main(String[] args) {
         if(args.length < 3) {
             System.out.println("the number of arguments does not match the required amount");
-            System.out.println("params are: port, max-slave-number, waiting-timeout");
+            System.out.println("params are: port, max-slave-number, waiting-timeout, slave-failure-timeout (optional)");
             return;
         }
 
         int port = Integer.parseInt(args[0]);
         int maxSlaves = Integer.parseInt(args[1]);
-        int timeout = Integer.parseInt(args[2]);
+        int connectionTimeout = Integer.parseInt(args[2]);
+        int slaveFailureTimeout;
+        try {
+            slaveFailureTimeout = Integer.parseInt(args[3]);
+        } catch (Exception e) {
+            slaveFailureTimeout = 30;
+        }
+
 
         try {
             ServerSocket serverSocket = new ServerSocket(port);
@@ -32,7 +39,7 @@ public class Master {
 
             int numberOfSlaves = 0;
             //wait for all slaves to connect and create initialization Task for each one
-            serverSocket.setSoTimeout(timeout*1000);
+            serverSocket.setSoTimeout(connectionTimeout*1000);
             try{
                 while(numberOfSlaves < maxSlaves) {
                     ClientSocketWrapper clientSocket = new ClientSocketWrapper(serverSocket.accept(), numberOfSlaves + 1, executor);
@@ -83,7 +90,7 @@ public class Master {
 
                 //if we ran out of available slaves, collect the calculated results
                 if(availableSlaves.size() == 0 || notDoneTasks.size() == 0){
-                    collectResults(workingSlaves, availableSlaves, results, notDoneTasks);
+                    collectResults(workingSlaves, availableSlaves, results, notDoneTasks, slaveFailureTimeout);
                 }
             }
 
@@ -99,15 +106,18 @@ public class Master {
         }
     }
 
-    private static void collectResults(List<ClientSocketWrapper> workingSlaves, List<ClientSocketWrapper> availableSlaves, List<String> results,
-                                       List<String> notDoneTasks) {
+    private static void collectResults(List<ClientSocketWrapper> workingSlaves,
+                                       List<ClientSocketWrapper> availableSlaves,
+                                       List<String> results,
+                                       List<String> notDoneTasks,
+                                       int slaveFailureTimeout) {
         Iterator workingSlavesIterator = workingSlaves.iterator();
         List<ClientSocketWrapper> failedSlaves = new ArrayList<>();
         while(workingSlavesIterator.hasNext()) {
             ClientSocketWrapper workingSlave = (ClientSocketWrapper) workingSlavesIterator.next();
             String result = null;
             try {
-                result = workingSlave.getResult(3);
+                result = workingSlave.getResult(slaveFailureTimeout);
                 if(result != null) {
                     results.add(result);
                 } else {
