@@ -2,9 +2,7 @@ package aau.distributedsystems.master;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class ClientSocketWrapper {
     private Socket socket;
@@ -13,13 +11,14 @@ public class ClientSocketWrapper {
     private ObjectInputStream dis;
     private ExecutorService executorService;
     private Future<String> runningTask;
-    private static String Stop = "Stop";
+    private String currentTask;
 
     public ClientSocketWrapper(Socket socket, int socketIdentifier, ExecutorService executor) {
         this.socket = socket;
         this.socketIdentifier = socketIdentifier;
         this.executorService = executor;
         this.runningTask = null;
+        this.currentTask = null;
         try {
             this.dous = new ObjectOutputStream(socket.getOutputStream());
             this.dis = new ObjectInputStream(socket.getInputStream());
@@ -52,19 +51,20 @@ public class ClientSocketWrapper {
     }
 
     public void work(String task) {
+        currentTask = task;
         runningTask = this.executorService.submit(new SlaveExerciseTask(this, task));
     }
 
-    public String getResult() {
+    public String getResult(long timeout) throws TimeoutException, ExecutionException, InterruptedException {
         String result = null;
         if(runningTask != null) {
-            try {
-                result = runningTask.get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            result = runningTask.get(timeout, TimeUnit.SECONDS);
             runningTask = null;
         }
         return result;
+    }
+
+    public String getCurrentTask() {
+        return currentTask;
     }
 }

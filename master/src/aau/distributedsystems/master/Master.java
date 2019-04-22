@@ -13,15 +13,15 @@ import java.util.concurrent.Future;
 public class Master {
 
     public static void main(String[] args) {
-        /*if(args.length < 3) {
+        if(args.length < 3) {
             System.out.println("the number of arguments does not match the required amount");
             System.out.println("params are: port, max-slave-number, waiting-timeout");
             return;
-        }*/
+        }
 
-        int port = 6666; //Integer.parseInt(args[0]);
-        int maxSlaves = 2; //Integer.parseInt(args[1]);
-        int timeout = 30;// Integer.parseInt(args[2]);
+        int port = Integer.parseInt(args[0]);
+        int maxSlaves = Integer.parseInt(args[1]);
+        int timeout = Integer.parseInt(args[2]);
 
         try {
             ServerSocket serverSocket = new ServerSocket(port);
@@ -59,10 +59,10 @@ public class Master {
             System.out.println("All connected slaves initialized...");
 
             //dummy exercises for slaves
-            List<String> exercises = new ArrayList<>();
-            exercises.add("ex1"); exercises.add("ex2"); exercises.add("ex3");
-            exercises.add("ex4"); exercises.add("ex5"); exercises.add("ex6");
-            exercises.add("ex7"); exercises.add("ex8"); exercises.add("ex9");
+            List<String> notDoneTasks = new ArrayList<>();
+            notDoneTasks.add("ex1"); notDoneTasks.add("ex2"); notDoneTasks.add("ex3");
+            notDoneTasks.add("ex4"); notDoneTasks.add("ex5"); notDoneTasks.add("ex6");
+            notDoneTasks.add("ex7"); notDoneTasks.add("ex8"); notDoneTasks.add("ex9");
 
 
             Iterator slaveIterator;
@@ -70,11 +70,9 @@ public class Master {
             List<String> results = new ArrayList<>();
 
             //iterate through exercises and distribute them to the available slaves
-            for (String exercise: exercises) {
-                //if we ran out of available slaves, collect the calculated results
-                if(availableSlaves.size() == 0){
-                    collectResults(workingSlaves, availableSlaves, results);
-                }
+            while(notDoneTasks.size() > 0) {
+                String exercise = notDoneTasks.get(0);
+                notDoneTasks.remove(exercise);
 
                 //iterate through available slaves and distribute a task to the next available slave
                 slaveIterator = availableSlaves.iterator();
@@ -82,8 +80,14 @@ public class Master {
                 availableSlave.work(exercise);
                 workingSlaves.add(availableSlave);
                 availableSlaves.remove(availableSlave);
+
+                //if we ran out of available slaves, collect the calculated results
+                if(availableSlaves.size() == 0 || notDoneTasks.size() == 0){
+                    collectResults(workingSlaves, availableSlaves, results, notDoneTasks);
+                }
             }
-            collectResults(workingSlaves, availableSlaves, results);
+
+            //collectResults(workingSlaves, availableSlaves, results, notDoneTasks);
             shutDownSlaves(availableSlaves);
 
             System.out.println(results);
@@ -95,16 +99,30 @@ public class Master {
         }
     }
 
-    private static void collectResults(List<ClientSocketWrapper> workingSlaves, List<ClientSocketWrapper> availableSlaves, List<String> results) {
+    private static void collectResults(List<ClientSocketWrapper> workingSlaves, List<ClientSocketWrapper> availableSlaves, List<String> results,
+                                       List<String> notDoneTasks) {
         Iterator workingSlavesIterator = workingSlaves.iterator();
+        List<ClientSocketWrapper> failedSlaves = new ArrayList<>();
         while(workingSlavesIterator.hasNext()) {
             ClientSocketWrapper workingSlave = (ClientSocketWrapper) workingSlavesIterator.next();
-            String result = workingSlave.getResult();
-            if(result != null)
-                results.add(result);
-            availableSlaves.add(workingSlave);
+            String result = null;
+            try {
+                result = workingSlave.getResult(3);
+                if(result != null) {
+                    results.add(result);
+                } else {
+                    notDoneTasks.add(workingSlave.getCurrentTask());
+                }
+                availableSlaves.add(workingSlave);
+            } catch (Exception e) {
+                System.out.println("slave " + workingSlave.getSocketIdentifier() + " not able to deliver result;");
+                notDoneTasks.add(workingSlave.getCurrentTask());
+                failedSlaves.add(workingSlave);
+            }
+
         }
         workingSlaves.removeAll(availableSlaves);
+        workingSlaves.removeAll(failedSlaves);
     }
 
     private static void shutDownSlaves(List<ClientSocketWrapper> slaves) {

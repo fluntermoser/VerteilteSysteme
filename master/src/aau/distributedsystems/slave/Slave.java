@@ -11,14 +11,14 @@ import java.net.Socket;
 public class Slave {
 
     public static void main(String[] args) {
-        /*if(args.length < 2) {
+        if(args.length < 2) {
             System.out.println("the number of arguments does not match the required amount");
             System.out.println("params are: server-address, server-port");
             return;
-        }*/
+        }
 
-        int port = 6666;// Integer.parseInt(args[1]);
-        String serverAddress = "localhost";// args[0];
+        int port = Integer.parseInt(args[1]);
+        String serverAddress = args[0];
         try {
             Socket s = new Socket(serverAddress,port);
             ObjectInputStream oin = new ObjectInputStream(s.getInputStream());
