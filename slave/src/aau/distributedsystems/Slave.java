@@ -19,8 +19,8 @@ public class Slave {
             return;
         }
 
-        int port = Integer.parseInt(args[1]);
-        String serverAddress = args[0];
+        int port = 6666;// Integer.parseInt(args[1]);
+        String serverAddress = "localhost";// args[0];
         try {
             Socket s = new Socket(serverAddress,port);
             DataInputStream din = new DataInputStream(s.getInputStream());
@@ -42,6 +42,7 @@ public class Slave {
                     dout.flush();
                 }
             }
+
             System.out.println("Shutting down...");
             dout.close();
             s.close();

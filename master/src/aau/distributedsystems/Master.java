@@ -1,9 +1,11 @@
 package aau.distributedsystems;
 
+import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -16,6 +18,7 @@ public class Master {
             System.out.println("params are: port, max-slave-number, waiting-timeout");
             return;
         }
+
         int port = Integer.parseInt(args[0]);
         int maxSlaves = Integer.parseInt(args[1]);
         int timeout = Integer.parseInt(args[2]);
@@ -25,17 +28,17 @@ public class Master {
             System.out.println("Wating for connections...");
             ExecutorService executor = Executors.newCachedThreadPool();
 
-            List<Future<AbstractMap.SimpleEntry<Integer, Socket>>> initFutures = new ArrayList<>();
+            List<Future<Slave>> initFutures = new ArrayList<>();
 
             int numberOfSlaves = 0;
             //wait for all slaves to connect and create initialization Task for each one
             serverSocket.setSoTimeout(timeout*1000);
             try{
                 while(numberOfSlaves < maxSlaves) {
-                    Socket clientSocket = serverSocket.accept();
+                    Slave clientSocket = new Slave(serverSocket.accept(), numberOfSlaves + 1, executor);
                     numberOfSlaves++;
                     System.out.println(numberOfSlaves + " slave(s) connected...");
-                    initFutures.add(executor.submit(new SlaveInitTask(clientSocket, numberOfSlaves)));
+                    initFutures.add(executor.submit(new SlaveInitTask(clientSocket)));
                 }
             } catch(SocketTimeoutException ste) {
                 System.out.println("Connection timeout expired...");
@@ -48,30 +51,69 @@ public class Master {
 
 
             //wait for each slave to send its initialize message
-            //putting all slave-sockets in a map to remember which slave is which
-            HashMap<Integer, Socket> slaves = new HashMap<>();
-            for (Future<AbstractMap.SimpleEntry<Integer, Socket>> future: initFutures) {
-                AbstractMap.SimpleEntry<Integer, Socket> result = future.get();
-                slaves.put(result.getKey(), result.getValue());
+            ArrayList<Slave> availableSlaves = new ArrayList<>();
+            for (Future<Slave> initTask: initFutures) {
+                availableSlaves.add(initTask.get());
             }
 
             System.out.println("All connected slaves initialized...");
 
-            //send exercises to all initialized slaves
-            List<Future<String>> exerciseFutures = new ArrayList<>();
-            for (Map.Entry<Integer, Socket> client: slaves.entrySet()) {
-                exerciseFutures.add(executor.submit(new SlaveExerciseTask(client.getValue(), "ex: " + Math.random(), client.getKey())));
-            }
+            //dummy exercises for slaves
+            List<String> exercises = new ArrayList<>();
+            exercises.add("ex1"); exercises.add("ex2"); exercises.add("ex3");
+            exercises.add("ex4"); exercises.add("ex5"); exercises.add("ex6");
+            exercises.add("ex7"); exercises.add("ex8"); exercises.add("ex9");
 
-            //wait for all slaves to finish their tasks and print results
-            for(Future<String> exerciseFuture: exerciseFutures) {
-                System.out.println(exerciseFuture.get());
-            }
 
+            Iterator slaveIterator;
+            List<Slave> workingSlaves = new ArrayList<>();
+            List<String> results = new ArrayList<>();
+
+            //iterate through exercises and distribute them to the available slaves
+            for (String exercise: exercises) {
+                //if we ran out of available slaves, collect the calculated results
+                if(availableSlaves.size() == 0){
+                    collectResults(workingSlaves, availableSlaves, results);
+                }
+
+                //iterate through available slaves and distribute a task to the next available slave
+                slaveIterator = availableSlaves.iterator();
+                Slave availableSlave = (Slave) slaveIterator.next();
+                availableSlave.work(exercise);
+                workingSlaves.add(availableSlave);
+                availableSlaves.remove(availableSlave);
+            }
+            collectResults(workingSlaves, availableSlaves, results);
+            shutDownSlaves(availableSlaves);
+
+            System.out.println(results);
             serverSocket.close();
             System.out.println("All results have been collected...");
+            return;
         } catch(Exception e) {
             System.out.println(e);
+        }
+    }
+
+    private static void collectResults(List<Slave> workingSlaves, List<Slave> availableSlaves, List<String> results) {
+        Iterator workingSlavesIterator = workingSlaves.iterator();
+        while(workingSlavesIterator.hasNext()) {
+            Slave workingSlave = (Slave) workingSlavesIterator.next();
+            String result = workingSlave.getResult();
+            if(result != null)
+                results.add(result);
+            availableSlaves.add(workingSlave);
+        }
+        workingSlaves.removeAll(availableSlaves);
+    }
+
+    private static void shutDownSlaves(List<Slave> slaves) {
+        for(Slave slave: slaves)  {
+            try {
+                slave.shutdown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
