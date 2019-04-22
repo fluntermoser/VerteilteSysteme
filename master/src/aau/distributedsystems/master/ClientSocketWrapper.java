@@ -1,31 +1,30 @@
-package aau.distributedsystems;
+package aau.distributedsystems.master;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class Slave {
+public class ClientSocketWrapper {
     private Socket socket;
     private int socketIdentifier;
-    private DataOutputStream dous;
-    private DataInputStream dis;
+    private ObjectOutputStream dous;
+    private ObjectInputStream dis;
     private ExecutorService executorService;
     private Future<String> runningTask;
     private static String Stop = "Stop";
 
-    public Slave(Socket socket, int socketIdentifier, ExecutorService executor) {
+    public ClientSocketWrapper(Socket socket, int socketIdentifier, ExecutorService executor) {
         this.socket = socket;
         this.socketIdentifier = socketIdentifier;
         this.executorService = executor;
         this.runningTask = null;
         try {
-            this.dous = new DataOutputStream(socket.getOutputStream());
-            this.dis = new DataInputStream(socket.getInputStream());
+            this.dous = new ObjectOutputStream(socket.getOutputStream());
+            this.dis = new ObjectInputStream(socket.getInputStream());
         } catch (IOException ex) {
+            ex.printStackTrace();
             System.out.println("error creating clientSocket");
         }
 
@@ -33,18 +32,18 @@ public class Slave {
 
     public void shutdown() throws IOException {
         //tell slave to shut down
-        dous.writeUTF(Stop);
+        dous.writeObject(new Message(MessageType.SHUTDOWN,0, null));
         dous.flush();
         this.dis.close();
         this.dous.close();
         this.socket.close();
     }
 
-    public DataOutputStream getOutputStream() {
+    public ObjectOutputStream getOutputStream() {
         return dous;
     }
 
-    public DataInputStream getInputStream() {
+    public ObjectInputStream getInputStream() {
         return dis;
     }
 

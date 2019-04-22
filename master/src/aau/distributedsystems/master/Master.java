@@ -1,4 +1,4 @@
-package aau.distributedsystems;
+package aau.distributedsystems.master;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,29 +13,29 @@ import java.util.concurrent.Future;
 public class Master {
 
     public static void main(String[] args) {
-        if(args.length < 3) {
+        /*if(args.length < 3) {
             System.out.println("the number of arguments does not match the required amount");
             System.out.println("params are: port, max-slave-number, waiting-timeout");
             return;
-        }
+        }*/
 
-        int port = Integer.parseInt(args[0]);
-        int maxSlaves = Integer.parseInt(args[1]);
-        int timeout = Integer.parseInt(args[2]);
+        int port = 6666; //Integer.parseInt(args[0]);
+        int maxSlaves = 2; //Integer.parseInt(args[1]);
+        int timeout = 30;// Integer.parseInt(args[2]);
 
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Wating for connections...");
             ExecutorService executor = Executors.newCachedThreadPool();
 
-            List<Future<Slave>> initFutures = new ArrayList<>();
+            List<Future<ClientSocketWrapper>> initFutures = new ArrayList<>();
 
             int numberOfSlaves = 0;
             //wait for all slaves to connect and create initialization Task for each one
             serverSocket.setSoTimeout(timeout*1000);
             try{
                 while(numberOfSlaves < maxSlaves) {
-                    Slave clientSocket = new Slave(serverSocket.accept(), numberOfSlaves + 1, executor);
+                    ClientSocketWrapper clientSocket = new ClientSocketWrapper(serverSocket.accept(), numberOfSlaves + 1, executor);
                     numberOfSlaves++;
                     System.out.println(numberOfSlaves + " slave(s) connected...");
                     initFutures.add(executor.submit(new SlaveInitTask(clientSocket)));
@@ -51,8 +51,8 @@ public class Master {
 
 
             //wait for each slave to send its initialize message
-            ArrayList<Slave> availableSlaves = new ArrayList<>();
-            for (Future<Slave> initTask: initFutures) {
+            ArrayList<ClientSocketWrapper> availableSlaves = new ArrayList<>();
+            for (Future<ClientSocketWrapper> initTask: initFutures) {
                 availableSlaves.add(initTask.get());
             }
 
@@ -66,7 +66,7 @@ public class Master {
 
 
             Iterator slaveIterator;
-            List<Slave> workingSlaves = new ArrayList<>();
+            List<ClientSocketWrapper> workingSlaves = new ArrayList<>();
             List<String> results = new ArrayList<>();
 
             //iterate through exercises and distribute them to the available slaves
@@ -78,7 +78,7 @@ public class Master {
 
                 //iterate through available slaves and distribute a task to the next available slave
                 slaveIterator = availableSlaves.iterator();
-                Slave availableSlave = (Slave) slaveIterator.next();
+                ClientSocketWrapper availableSlave = (ClientSocketWrapper) slaveIterator.next();
                 availableSlave.work(exercise);
                 workingSlaves.add(availableSlave);
                 availableSlaves.remove(availableSlave);
@@ -95,10 +95,10 @@ public class Master {
         }
     }
 
-    private static void collectResults(List<Slave> workingSlaves, List<Slave> availableSlaves, List<String> results) {
+    private static void collectResults(List<ClientSocketWrapper> workingSlaves, List<ClientSocketWrapper> availableSlaves, List<String> results) {
         Iterator workingSlavesIterator = workingSlaves.iterator();
         while(workingSlavesIterator.hasNext()) {
-            Slave workingSlave = (Slave) workingSlavesIterator.next();
+            ClientSocketWrapper workingSlave = (ClientSocketWrapper) workingSlavesIterator.next();
             String result = workingSlave.getResult();
             if(result != null)
                 results.add(result);
@@ -107,8 +107,8 @@ public class Master {
         workingSlaves.removeAll(availableSlaves);
     }
 
-    private static void shutDownSlaves(List<Slave> slaves) {
-        for(Slave slave: slaves)  {
+    private static void shutDownSlaves(List<ClientSocketWrapper> slaves) {
+        for(ClientSocketWrapper slave: slaves)  {
             try {
                 slave.shutdown();
             } catch (IOException e) {

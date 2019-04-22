@@ -1,11 +1,11 @@
 # Master
 to run the master application follow these steps:
-- go to folder: master\out\production\master 
+- go to folder:master\out\production\master_slave
 - open command line
-- run: java aau.distributedsystems.Master port max-number-of-slaves timeout-in-seconds
+- run: java aau.distributedsystems.master.Master port max-number-of-slaves timeout-in-seconds
 
 # Slave
 to run the master application follow these steps:
-- go to folder: slave\out\production\slave
+- go to folder: master\out\production\master_slave
 - open command line
-- run: java aau.distributedsystems.Slave server-address port-of-server
+- run: java aau.distributedsystems.slave.Slave server-address port-of-server
