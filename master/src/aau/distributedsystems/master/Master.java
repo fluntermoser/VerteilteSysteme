@@ -67,10 +67,9 @@ public class Master {
 
             //dummy exercises for slaves
             List<String> notDoneTasks = new ArrayList<>();
-            notDoneTasks.add("ex1"); notDoneTasks.add("ex2"); notDoneTasks.add("ex3");
-            notDoneTasks.add("ex4"); notDoneTasks.add("ex5"); notDoneTasks.add("ex6");
-            notDoneTasks.add("ex7"); notDoneTasks.add("ex8"); notDoneTasks.add("ex9");
-
+            for(int i = 0; i < 30; i++) {
+                notDoneTasks.add("ex" + i);
+            }
 
             Iterator slaveIterator;
             List<ClientSocketWrapper> workingSlaves = new ArrayList<>();
