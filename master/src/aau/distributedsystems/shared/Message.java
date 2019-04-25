@@ -1,4 +1,4 @@
-package aau.distributedsystems.master;
+package aau.distributedsystems.shared;
 
 import java.io.Serializable;
 

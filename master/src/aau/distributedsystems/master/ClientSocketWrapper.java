@@ -1,5 +1,9 @@
 package aau.distributedsystems.master;
 
+import aau.distributedsystems.shared.MatrixBlockTuple;
+import aau.distributedsystems.shared.Message;
+import aau.distributedsystems.shared.MessageType;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.*;
@@ -10,8 +14,8 @@ public class ClientSocketWrapper {
     private ObjectOutputStream dous;
     private ObjectInputStream dis;
     private ExecutorService executorService;
-    private Future<String> runningTask;
-    private String currentTask;
+    private Future<int[][]> runningTask;
+    private MatrixBlockTuple currentTask;
 
     public ClientSocketWrapper(Socket socket, int socketIdentifier, ExecutorService executor) {
         this.socket = socket;
@@ -50,13 +54,13 @@ public class ClientSocketWrapper {
         return socketIdentifier;
     }
 
-    public void work(String task) {
+    public void work(MatrixBlockTuple task) {
         currentTask = task;
         runningTask = this.executorService.submit(new SlaveExerciseTask(this, task));
     }
 
-    public String getResult(long timeout) throws TimeoutException, ExecutionException, InterruptedException {
-        String result = null;
+    public int[][] getResult(long timeout) throws TimeoutException, ExecutionException, InterruptedException {
+        int[][] result = null;
         if(runningTask != null) {
             result = runningTask.get(timeout, TimeUnit.SECONDS);
             runningTask = null;
@@ -64,7 +68,7 @@ public class ClientSocketWrapper {
         return result;
     }
 
-    public String getCurrentTask() {
+    public MatrixBlockTuple getCurrentTask() {
         return currentTask;
     }
 }

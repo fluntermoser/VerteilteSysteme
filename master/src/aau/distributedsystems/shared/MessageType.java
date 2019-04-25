@@ -1,4 +1,4 @@
-package aau.distributedsystems.master;
+package aau.distributedsystems.shared;
 
 public enum MessageType {
     INITIALIZE,

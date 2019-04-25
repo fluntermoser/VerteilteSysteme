@@ -1,5 +1,9 @@
 package aau.distributedsystems.master;
 
+import aau.distributedsystems.shared.MatrixBlock;
+import aau.distributedsystems.shared.MatrixBlockTuple;
+import aau.distributedsystems.shared.MatrixUtil;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
@@ -65,19 +69,30 @@ public class Master {
 
             System.out.println("All connected slaves initialized...");
 
-            //dummy exercises for slaves
-            List<String> notDoneTasks = new ArrayList<>();
-            for(int i = 0; i < 30; i++) {
-                notDoneTasks.add("ex" + i);
-            }
+            int r = 4;
+            int q = 4;
+            int s = 4;
+            int[][] a = MatrixUtil.generateMatrix(r, s);
+            int[][] b = MatrixUtil.generateMatrix(q, r);
+
+            //the result matrix has q * s fields from [0][0] to [q][s]
+            //the idea here is to create a task for each field, that can then be solved by a slave
+            int[][] resultMatrix = new int[q][s];
+
+            List<MatrixBlock> blocksA = MatrixUtil.splitInBlocks(a);
+            List<MatrixBlock> blocksB = MatrixUtil.splitInBlocks(b);
+
+            //hardcoded multiplications
+            List<MatrixBlockTuple> notDoneTasks = new ArrayList<MatrixBlockTuple>();
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(0)));
 
             Iterator slaveIterator;
             List<ClientSocketWrapper> workingSlaves = new ArrayList<>();
-            List<String> results = new ArrayList<>();
+            List<int[][]> results = new ArrayList<>();
 
             //iterate through exercises and distribute them to the available slaves
             while(notDoneTasks.size() > 0) {
-                String exercise = notDoneTasks.get(0);
+                MatrixBlockTuple exercise = notDoneTasks.get(0);
                 notDoneTasks.remove(exercise);
 
                 //iterate through available slaves and distribute a task to the next available slave
@@ -96,7 +111,10 @@ public class Master {
             //collectResults(workingSlaves, availableSlaves, results, notDoneTasks);
             shutDownSlaves(availableSlaves);
 
-            System.out.println(results);
+            for(int[][] result : results) {
+                MatrixUtil.printMatrix(result);
+            }
+            //System.out.println(results);
             serverSocket.close();
             System.out.println("All results have been collected...");
             return;
@@ -107,14 +125,14 @@ public class Master {
 
     private static void collectResults(List<ClientSocketWrapper> workingSlaves,
                                        List<ClientSocketWrapper> availableSlaves,
-                                       List<String> results,
-                                       List<String> notDoneTasks,
+                                       List<int[][]> results,
+                                       List<MatrixBlockTuple> notDoneTasks,
                                        int slaveFailureTimeout) {
         Iterator workingSlavesIterator = workingSlaves.iterator();
         List<ClientSocketWrapper> failedSlaves = new ArrayList<>();
         while(workingSlavesIterator.hasNext()) {
             ClientSocketWrapper workingSlave = (ClientSocketWrapper) workingSlavesIterator.next();
-            String result = null;
+            int[][] result = null;
             try {
                 result = workingSlave.getResult(slaveFailureTimeout);
                 if(result != null) {
@@ -143,5 +161,7 @@ public class Master {
             }
         }
     }
+
+
 
 }

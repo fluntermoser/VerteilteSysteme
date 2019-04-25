@@ -1,5 +1,8 @@
 package aau.distributedsystems.master;
 
+import aau.distributedsystems.shared.Message;
+import aau.distributedsystems.shared.MessageType;
+
 import java.io.ObjectInputStream;
 import java.util.concurrent.Callable;
 
