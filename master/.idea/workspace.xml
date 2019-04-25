@@ -12,13 +12,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="Master.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Master.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="86" column="44" lean-forward="false" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
+            <state relative-caret-position="204">
+              <caret line="78" column="81" lean-forward="false" selection-start-line="78" selection-start-column="81" selection-end-line="78" selection-end-column="81" />
               <folding>
-                <element signature="e#3449#3467#0" expanded="true" />
+                <element signature="e#3453#3471#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -94,11 +94,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Slave.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Slave.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="39" column="82" lean-forward="true" selection-start-line="39" selection-start-column="82" selection-end-line="39" selection-end-column="82" />
+            <state relative-caret-position="595">
+              <caret line="35" column="90" lean-forward="false" selection-start-line="35" selection-start-column="90" selection-end-line="35" selection-end-column="90" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -181,12 +181,12 @@
         <option value="$PROJECT_DIR$/src/test/aau/distributedsystems/shared/MatrixUtilTest.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/Message.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MessageSerializer.java" />
-        <option value="$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/master/SlaveExerciseTask.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/master/ClientSocketWrapper.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixUtil.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixBlockTuple.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixBlock.java" />
+        <option value="$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java" />
       </list>
     </option>
@@ -493,7 +493,7 @@
       <workItem from="1555745429282" duration="27790000" />
       <workItem from="1556114098833" duration="2497000" />
       <workItem from="1556174057429" duration="4495000" />
-      <workItem from="1556182610198" duration="13096000" />
+      <workItem from="1556182610198" duration="13576000" />
     </task>
     <servers />
   </component>
@@ -530,7 +530,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47878000" />
+    <option name="totallyTimeSpent" value="48358000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -987,16 +987,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="39" column="82" lean-forward="true" selection-start-line="39" selection-start-column="82" selection-end-line="39" selection-end-column="82" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/SlaveExerciseTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="145">
@@ -1059,10 +1049,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="86" column="44" lean-forward="false" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
+        <state relative-caret-position="204">
+          <caret line="78" column="81" lean-forward="false" selection-start-line="78" selection-start-column="81" selection-end-line="78" selection-end-column="81" />
           <folding>
-            <element signature="e#3449#3467#0" expanded="true" />
+            <element signature="e#3453#3471#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="35" column="90" lean-forward="false" selection-start-line="35" selection-start-column="90" selection-end-line="35" selection-end-column="90" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -34,8 +34,6 @@ public class Slave {
                     MatrixBlockTuple exercise = (MatrixBlockTuple) MessageSerializer.objectFromByteArray(serverInput.getData());
                     if (exercise != null) {
                         System.out.println("Received exercise: " + serverInput.getData());
-                        //pretend to be working
-                        Thread.sleep(1000);
                         int[][] result = MatrixUtil.multiply(exercise.getBlockA().getBlock(), exercise.getBlockB().getBlock());
                         byte[] data = MessageSerializer.objectToByteArray(result);
                         oous.writeObject(new Message(MessageType.RESULT, data.length, data));

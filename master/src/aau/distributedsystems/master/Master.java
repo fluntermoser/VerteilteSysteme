@@ -70,8 +70,8 @@ public class Master {
             System.out.println("All connected slaves initialized...");
 
             int r = 4;
-            int q = 4;
-            int s = 4;
+            int q = 100;
+            int s = 100;
             int[][] a = MatrixUtil.generateMatrix(r, s);
             int[][] b = MatrixUtil.generateMatrix(q, r);
 
@@ -84,7 +84,15 @@ public class Master {
 
             //hardcoded multiplications
             List<MatrixBlockTuple> notDoneTasks = new ArrayList<MatrixBlockTuple>();
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(0)));
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(0))); //a11 * b11
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(1), blocksB.get(2))); //a12 * b21
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(1))); //a11 * b12
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(1), blocksB.get(3))); //a12 * b22
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(2), blocksB.get(0))); //a21 * b11
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(3), blocksB.get(2))); //a22 * b21
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(2), blocksB.get(1))); //a21 * b12
+            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(3), blocksB.get(3))); //a22 * b22
+
 
             Iterator slaveIterator;
             List<ClientSocketWrapper> workingSlaves = new ArrayList<>();
