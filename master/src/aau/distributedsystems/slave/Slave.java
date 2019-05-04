@@ -17,7 +17,7 @@ public class Slave {
 
         int port = Integer.parseInt(args[1]);
         String serverAddress = args[0];
-        int id = Integer.parseInt(args[2]);
+        short id = Short.parseShort(args[2]);
         try {
             Socket s = new Socket(serverAddress, port);
             ObjectInputStream oin = new ObjectInputStream(s.getInputStream());

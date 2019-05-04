@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Message implements Serializable {
     private MessageType messageType;
-    private int slaveId;
+    private short slaveId;
     private long length;
     private byte[] data;
 
@@ -14,16 +14,9 @@ public class Message implements Serializable {
         this.data = data;
     }
 
-    public Message(MessageType messageType, int id) {
+    public Message(MessageType messageType, short id) {
         this.messageType = messageType;
         this.slaveId = id;
-    }
-
-    public Message(MessageType messageType, int id, long length, byte[] data) {
-        this.messageType = messageType;
-        this.slaveId = id;
-        this.length = length;
-        this.data = data;
     }
 
     public MessageType getMessageType() {
