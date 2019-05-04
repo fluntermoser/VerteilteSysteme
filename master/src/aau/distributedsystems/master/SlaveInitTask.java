@@ -25,6 +25,7 @@ public class SlaveInitTask implements Callable<ClientSocketWrapper> {
         while(clientMessage == null || !clientMessage.getMessageType().equals(MessageType.INITIALIZE)){
             clientMessage = (Message)din.readObject();
         }
+        clientSocket.setSocketIdentifier(clientMessage.getSlaveId());
         System.out.println("Client " + clientSocket.getSocketIdentifier() + " initialized...");
         return clientSocket;
     }

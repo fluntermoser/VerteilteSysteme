@@ -1,8 +1,8 @@
 package test.aau.distributedsystems.shared;
 
 import aau.distributedsystems.shared.MatrixBlock;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import aau.distributedsystems.shared.MatrixUtil;
 
 import java.util.List;

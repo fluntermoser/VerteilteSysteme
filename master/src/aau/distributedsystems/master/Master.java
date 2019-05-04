@@ -1,8 +1,6 @@
 package aau.distributedsystems.master;
 
-import aau.distributedsystems.shared.MatrixBlock;
-import aau.distributedsystems.shared.MatrixBlockTuple;
-import aau.distributedsystems.shared.MatrixUtil;
+import aau.distributedsystems.shared.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class Master {
 
@@ -46,7 +45,8 @@ public class Master {
             serverSocket.setSoTimeout(connectionTimeout*1000);
             try{
                 while(numberOfSlaves < maxSlaves) {
-                    ClientSocketWrapper clientSocket = new ClientSocketWrapper(serverSocket.accept(), numberOfSlaves + 1, executor);
+
+                    ClientSocketWrapper clientSocket = new ClientSocketWrapper(serverSocket.accept(), executor);
                     numberOfSlaves++;
                     System.out.println(numberOfSlaves + " slave(s) connected...");
                     initFutures.add(executor.submit(new SlaveInitTask(clientSocket)));
@@ -79,49 +79,29 @@ public class Master {
             //the idea here is to create a task for each field, that can then be solved by a slave
             int[][] resultMatrix = new int[q][s];
 
-            List<MatrixBlock> blocksA = MatrixUtil.splitInBlocks(a);
-            List<MatrixBlock> blocksB = MatrixUtil.splitInBlocks(b);
+            List<ResultTuple> results = new ArrayList<>();
 
-            //hardcoded multiplications
-            List<MatrixBlockTuple> notDoneTasks = new ArrayList<MatrixBlockTuple>();
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(0))); //a11 * b11
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(1), blocksB.get(2))); //a12 * b21
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(1))); //a11 * b12
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(1), blocksB.get(3))); //a12 * b22
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(2), blocksB.get(0))); //a21 * b11
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(3), blocksB.get(2))); //a22 * b21
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(2), blocksB.get(1))); //a21 * b12
-            notDoneTasks.add(new MatrixBlockTuple(blocksA.get(3), blocksB.get(3))); //a22 * b22
-
-
-            Iterator slaveIterator;
-            List<ClientSocketWrapper> workingSlaves = new ArrayList<>();
-            List<int[][]> results = new ArrayList<>();
+            //get multiplication tasks
+            List<MatrixBlockTuple> multiplicationTasks = getMultiplicationTasks(a, b);
 
             //iterate through exercises and distribute them to the available slaves
-            while(notDoneTasks.size() > 0) {
-                MatrixBlockTuple exercise = notDoneTasks.get(0);
-                notDoneTasks.remove(exercise);
+            //first perform all multiplications
+            distributeTasksAndCollectResults(multiplicationTasks, availableSlaves, results, slaveFailureTimeout, MessageType.EXERCISE_MULTI);
 
-                //iterate through available slaves and distribute a task to the next available slave
-                slaveIterator = availableSlaves.iterator();
-                ClientSocketWrapper availableSlave = (ClientSocketWrapper) slaveIterator.next();
-                availableSlave.work(exercise);
-                workingSlaves.add(availableSlave);
-                availableSlaves.remove(availableSlave);
+            //get needed additions from the calculated results
+            List<MatrixBlockTuple> additionTasks = getAdditionTasks(results);
+            results = new ArrayList<>();
 
-                //if we ran out of available slaves, collect the calculated results
-                if(availableSlaves.size() == 0 || notDoneTasks.size() == 0){
-                    collectResults(workingSlaves, availableSlaves, results, notDoneTasks, slaveFailureTimeout);
-                }
-            }
+            //let the slaves perform additions
+            distributeTasksAndCollectResults(additionTasks, availableSlaves, results, slaveFailureTimeout, MessageType.EXERCISE_ADD);
 
-            //collectResults(workingSlaves, availableSlaves, results, notDoneTasks);
+            //the slaves may shutdown now
             shutDownSlaves(availableSlaves);
 
-            for(int[][] result : results) {
-                MatrixUtil.printMatrix(result);
-            }
+            //last we have to combine the results to one matrix again
+            MatrixUtil.combineBlocks(results, resultMatrix);
+            MatrixUtil.printMatrix(resultMatrix);
+
             //System.out.println(results);
             serverSocket.close();
             System.out.println("All results have been collected...");
@@ -131,16 +111,51 @@ public class Master {
         }
     }
 
+
+    private static void shutDownSlaves(List<ClientSocketWrapper> slaves) {
+        for(ClientSocketWrapper slave: slaves)  {
+            try {
+                slave.shutdown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void distributeTasksAndCollectResults(List<MatrixBlockTuple> tasks, List<ClientSocketWrapper> availableSlaves,
+                                                         List<ResultTuple> results, int slaveFailureTimeout, MessageType exerciseType) {
+        List<ClientSocketWrapper> workingSlaves = new ArrayList<>();
+        Iterator slaveIterator;
+        //iterate through exercises and distribute them to the available slaves
+        //first perform all multiplications
+        while(tasks.size() > 0) {
+            MatrixBlockTuple exercise = tasks.get(0);
+            tasks.remove(exercise);
+
+            //iterate through available slaves and distribute a task to the next available slave
+            slaveIterator = availableSlaves.iterator();
+            ClientSocketWrapper availableSlave = (ClientSocketWrapper) slaveIterator.next();
+            availableSlave.work(exercise, exerciseType);
+            workingSlaves.add(availableSlave);
+            availableSlaves.remove(availableSlave);
+
+            //if we ran out of available slaves, collect the calculated results
+            if(availableSlaves.size() == 0 || tasks.size() == 0){
+                collectResults(workingSlaves, availableSlaves, results, tasks, slaveFailureTimeout);
+            }
+        }
+    }
+
     private static void collectResults(List<ClientSocketWrapper> workingSlaves,
                                        List<ClientSocketWrapper> availableSlaves,
-                                       List<int[][]> results,
+                                       List<ResultTuple> results,
                                        List<MatrixBlockTuple> notDoneTasks,
                                        int slaveFailureTimeout) {
         Iterator workingSlavesIterator = workingSlaves.iterator();
         List<ClientSocketWrapper> failedSlaves = new ArrayList<>();
         while(workingSlavesIterator.hasNext()) {
             ClientSocketWrapper workingSlave = (ClientSocketWrapper) workingSlavesIterator.next();
-            int[][] result = null;
+            ResultTuple result = null;
             try {
                 result = workingSlave.getResult(slaveFailureTimeout);
                 if(result != null) {
@@ -160,14 +175,42 @@ public class Master {
         workingSlaves.removeAll(failedSlaves);
     }
 
-    private static void shutDownSlaves(List<ClientSocketWrapper> slaves) {
-        for(ClientSocketWrapper slave: slaves)  {
-            try {
-                slave.shutdown();
-            } catch (IOException e) {
-                e.printStackTrace();
+
+    private static  List<MatrixBlockTuple> getMultiplicationTasks(int[][] matrixA, int[][] matrixB) {
+        List<MatrixBlock> blocksA = MatrixUtil.splitInBlocks(matrixA);
+        List<MatrixBlock> blocksB = MatrixUtil.splitInBlocks(matrixB);
+
+        //hardcoded multiplications
+        List<MatrixBlockTuple> tasks = new ArrayList<MatrixBlockTuple>();
+        //C11
+        tasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(0), ResultMatrixPart.C11)); //a11 * b11
+        tasks.add(new MatrixBlockTuple(blocksA.get(1), blocksB.get(2), ResultMatrixPart.C11)); //a12 * b21
+
+        //C12
+        tasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(1), ResultMatrixPart.C12)); //a11 * b12
+        tasks.add(new MatrixBlockTuple(blocksA.get(1), blocksB.get(3), ResultMatrixPart.C12)); //a12 * b22
+
+        //C21
+        tasks.add(new MatrixBlockTuple(blocksA.get(2), blocksB.get(0), ResultMatrixPart.C21)); //a21 * b11
+        tasks.add(new MatrixBlockTuple(blocksA.get(3), blocksB.get(2), ResultMatrixPart.C21)); //a22 * b21
+
+        //C22
+        tasks.add(new MatrixBlockTuple(blocksA.get(2), blocksB.get(1), ResultMatrixPart.C22)); //a21 * b12
+        tasks.add(new MatrixBlockTuple(blocksA.get(3), blocksB.get(3), ResultMatrixPart.C22)); //a22 * b22
+
+        return tasks;
+    }
+
+    private static List<MatrixBlockTuple> getAdditionTasks(List<ResultTuple> multiplicationResults) {
+        List<MatrixBlockTuple> additionTasks = new ArrayList<>();
+        for(ResultMatrixPart part : ResultMatrixPart.values()) {
+            List<ResultTuple> rT = multiplicationResults.stream().filter(t -> part.equals(t.getPart())).collect(Collectors.toList());
+            if(rT.size() == 2) {
+                additionTasks.add(new MatrixBlockTuple(new MatrixBlock(rT.get(0).getMatrix()), new MatrixBlock(rT.get(1).getMatrix()), part));
             }
         }
+
+        return additionTasks;
     }
 
 

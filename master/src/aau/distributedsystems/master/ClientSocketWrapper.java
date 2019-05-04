@@ -3,6 +3,7 @@ package aau.distributedsystems.master;
 import aau.distributedsystems.shared.MatrixBlockTuple;
 import aau.distributedsystems.shared.Message;
 import aau.distributedsystems.shared.MessageType;
+import aau.distributedsystems.shared.ResultTuple;
 
 import java.io.*;
 import java.net.Socket;
@@ -14,12 +15,11 @@ public class ClientSocketWrapper {
     private ObjectOutputStream dous;
     private ObjectInputStream dis;
     private ExecutorService executorService;
-    private Future<int[][]> runningTask;
+    private Future<ResultTuple> runningTask;
     private MatrixBlockTuple currentTask;
 
-    public ClientSocketWrapper(Socket socket, int socketIdentifier, ExecutorService executor) {
+    public ClientSocketWrapper(Socket socket, ExecutorService executor) {
         this.socket = socket;
-        this.socketIdentifier = socketIdentifier;
         this.executorService = executor;
         this.runningTask = null;
         this.currentTask = null;
@@ -54,13 +54,13 @@ public class ClientSocketWrapper {
         return socketIdentifier;
     }
 
-    public void work(MatrixBlockTuple task) {
+    public void work(MatrixBlockTuple task, MessageType exerciseType) {
         currentTask = task;
-        runningTask = this.executorService.submit(new SlaveExerciseTask(this, task));
+        runningTask = this.executorService.submit(new SlaveExerciseTask(this, task, exerciseType));
     }
 
-    public int[][] getResult(long timeout) throws TimeoutException, ExecutionException, InterruptedException {
-        int[][] result = null;
+    public ResultTuple getResult(long timeout) throws TimeoutException, ExecutionException, InterruptedException {
+        ResultTuple result = null;
         if(runningTask != null) {
             result = runningTask.get(timeout, TimeUnit.SECONDS);
             runningTask = null;
@@ -70,5 +70,9 @@ public class ClientSocketWrapper {
 
     public MatrixBlockTuple getCurrentTask() {
         return currentTask;
+    }
+
+    public void setSocketIdentifier(int socketIdentifier) {
+        this.socketIdentifier = socketIdentifier;
     }
 }

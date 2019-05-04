@@ -51,8 +51,6 @@ public class MatrixUtil {
 
         int[][] result = new int[a.length][a[0].length];
 
-        printMatrix(a);
-        printMatrix(b);
         for(int i = 0; i < a.length; i++) {
             for(int j = 0; j < a[0].length; j++) {
                 result[i][j] = a[i][j] + b[i][j];
@@ -92,5 +90,32 @@ public class MatrixUtil {
         }
 
         return blocks;
+    }
+
+    public static void combineBlocks(List<ResultTuple> blocks, int[][] result) {
+        for(ResultTuple block : blocks) {
+            switch (block.getPart()) {
+                case C11:
+                    writeToMatrix(result, block.getMatrix(), 0, 0);
+                    break;
+                case C12:
+                    writeToMatrix(result, block.getMatrix(), result.length/2, 0);
+                    break;
+                case C21:
+                    writeToMatrix(result, block.getMatrix(), 0, result[0].length / 2);
+                    break;
+                case C22:
+                    writeToMatrix(result, block.getMatrix(), result.length/2, result[0].length / 2);
+                    break;
+            }
+        }
+    }
+
+    private static void writeToMatrix(int[][] matrix, int[][] part, int startX, int startY) {
+        for(int i = 0; i < part.length; i++) {
+            for(int j = 0; j < part[0].length; j++) {
+                matrix[startX + i][startY + j] = part[i][j];
+            }
+        }
     }
 }
