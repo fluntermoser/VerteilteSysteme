@@ -20,8 +20,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="174" column="106" selection-start-line="174" selection-start-column="106" selection-end-line="174" selection-end-column="106" />
+            <state relative-caret-position="486">
+              <caret line="124" column="56" selection-start-line="124" selection-start-column="56" selection-end-line="124" selection-end-column="56" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -274,6 +274,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -435,7 +436,7 @@
       <workItem from="1556182610198" duration="13690000" />
       <workItem from="1556532887556" duration="1382000" />
       <workItem from="1556959025933" duration="29000" />
-      <workItem from="1556968380580" duration="7189000" />
+      <workItem from="1556968380580" duration="9114000" />
     </task>
     <servers />
   </component>
@@ -472,7 +473,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57072000" />
+    <option name="totallyTimeSpent" value="58997000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -723,8 +724,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="174" column="106" selection-start-line="174" selection-start-column="106" selection-end-line="174" selection-end-column="106" />
+        <state relative-caret-position="486">
+          <caret line="124" column="56" selection-start-line="124" selection-start-column="56" selection-end-line="124" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

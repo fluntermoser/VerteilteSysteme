@@ -34,7 +34,7 @@ public class Master {
             slaveFailureTimeout = 30;
         }
 
-
+        long time = System.currentTimeMillis();
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Wating for connections...");
@@ -117,11 +117,12 @@ public class Master {
 
             //last we have to combine the results to one matrix again
             MatrixUtil.combineBlocks(results, resultMatrix);
+            time = (System.currentTimeMillis() - time);
             MatrixUtil.printMatrix(resultMatrix);
 
-            //System.out.println(results);
             serverSocket.close();
             System.out.println("All results have been collected...");
+            System.out.println("Execution time: " + time);
             return;
         } catch(Exception e) {
             System.out.println(e);
