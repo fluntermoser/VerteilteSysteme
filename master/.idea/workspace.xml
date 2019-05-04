@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ecdc29d5-0dae-462c-ae98-c5ab40a54206" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/out/production/master_slave/aau/distributedsystems/master/Master.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/master_slave/aau/distributedsystems/master/Master.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -20,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="125" column="32" selection-start-line="125" selection-start-column="32" selection-end-line="125" selection-end-column="32" />
+            <state relative-caret-position="445">
+              <caret line="127" column="9" selection-start-line="127" selection-start-column="9" selection-end-line="127" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -68,7 +69,7 @@
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixBlock.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="367">
-              <caret line="22" column="20" lean-forward="true" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+              <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
               <folding>
                 <element signature="e#362#363#0" expanded="true" />
                 <element signature="e#397#398#0" expanded="true" />
@@ -125,7 +126,7 @@
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-92">
-              <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+              <caret line="37" selection-start-line="37" selection-end-line="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -436,7 +437,7 @@
       <workItem from="1556182610198" duration="13690000" />
       <workItem from="1556532887556" duration="1382000" />
       <workItem from="1556959025933" duration="29000" />
-      <workItem from="1556968380580" duration="9807000" />
+      <workItem from="1556968380580" duration="9950000" />
     </task>
     <servers />
   </component>
@@ -473,7 +474,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="59690000" />
+    <option name="totallyTimeSpent" value="59833000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -669,7 +670,7 @@
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixBlock.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="367">
-          <caret line="22" column="20" lean-forward="true" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
+          <caret line="22" column="20" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
           <folding>
             <element signature="e#362#363#0" expanded="true" />
             <element signature="e#397#398#0" expanded="true" />
@@ -715,7 +716,7 @@
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-92">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -724,8 +725,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="125" column="32" selection-start-line="125" selection-start-column="32" selection-end-line="125" selection-end-column="32" />
+        <state relative-caret-position="445">
+          <caret line="127" column="9" selection-start-line="127" selection-start-column="9" selection-end-line="127" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

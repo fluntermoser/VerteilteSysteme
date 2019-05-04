@@ -119,9 +119,12 @@ public class Master {
             time = (System.currentTimeMillis() - time);
             MatrixUtil.printMatrix(resultMatrix);
 
+            executor.shutdown();
             serverSocket.close();
+            
             System.out.println("All results have been collected...");
             System.out.println("Execution time: " + time);
+            System.in.read();
         } catch(Exception e) {
             e.printStackTrace();
         }
