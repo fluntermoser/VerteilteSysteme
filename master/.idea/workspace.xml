@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ecdc29d5-0dae-462c-ae98-c5ab40a54206" name="Default" comment="" />
+    <list default="true" id="ecdc29d5-0dae-462c-ae98-c5ab40a54206" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,11 +20,23 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1717">
-              <caret line="101" column="60" selection-start-line="101" selection-start-column="60" selection-end-line="101" selection-end-column="60" />
+            <state relative-caret-position="248">
+              <caret line="174" column="106" selection-start-line="174" selection-start-column="106" selection-end-line="174" selection-end-column="106" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#7859#7877#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/SlaveInitTask.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="19" column="56" selection-start-line="19" selection-start-column="56" selection-end-line="19" selection-end-column="56" />
+              <folding>
+                <element signature="e#441#442#0" expanded="true" />
+                <element signature="e#489#490#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -64,6 +78,18 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/ClientSocketWrapper.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="35" column="16" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixBlockTuple.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
@@ -96,15 +122,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/shared/ResultMatrixPart.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-58">
@@ -127,20 +144,6 @@
                 <element signature="method#multiply#0;class#MatrixUtil#0" />
                 <element signature="method#add#0;class#MatrixUtil#0" />
                 <element signature="method#printMatrix#0;class#MatrixUtil#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/ClientSocketWrapper.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="58" column="96" selection-start-line="58" selection-start-column="96" selection-end-line="58" selection-end-column="96" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2197#2198#0" expanded="true" />
-                <element signature="e#2253#2254#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -184,7 +187,6 @@
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MessageSerializer.java" />
         <option value="$PROJECT_DIR$/src/test/aau/distributedsystems/shared/MatrixUtilTest.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/Message.java" />
-        <option value="$PROJECT_DIR$/src/aau/distributedsystems/master/SlaveInitTask.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/ResultMatrixPart.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixBlockTuple.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/ResultTuple.java" />
@@ -194,6 +196,7 @@
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixBlock.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/slave/Slave.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/shared/MatrixUtil.java" />
+        <option value="$PROJECT_DIR$/src/aau/distributedsystems/master/SlaveInitTask.java" />
         <option value="$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java" />
       </list>
     </option>
@@ -432,7 +435,7 @@
       <workItem from="1556182610198" duration="13690000" />
       <workItem from="1556532887556" duration="1382000" />
       <workItem from="1556959025933" duration="29000" />
-      <workItem from="1556968380580" duration="6363000" />
+      <workItem from="1556968380580" duration="7189000" />
     </task>
     <servers />
   </component>
@@ -469,10 +472,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="56246000" />
+    <option name="totallyTimeSpent" value="57072000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25426438" />
       <window_info id="Structure" order="1" weight="0.25" />
@@ -594,17 +598,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/SlaveInitTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="23" column="24" lean-forward="true" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
-          <folding>
-            <element signature="e#441#442#0" expanded="true" />
-            <element signature="e#489#490#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/shared/MessageType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -616,18 +609,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="27" column="49" selection-start-line="27" selection-start-column="49" selection-end-line="27" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/ClientSocketWrapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="58" column="96" selection-start-line="58" selection-start-column="96" selection-end-line="58" selection-end-column="96" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2197#2198#0" expanded="true" />
-            <element signature="e#2253#2254#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -719,13 +700,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
+    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/SlaveInitTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1717">
-          <caret line="101" column="60" selection-start-line="101" selection-start-column="60" selection-end-line="101" selection-end-column="60" />
+        <state relative-caret-position="255">
+          <caret line="19" column="56" selection-start-line="19" selection-start-column="56" selection-end-line="19" selection-end-column="56" />
+          <folding>
+            <element signature="e#441#442#0" expanded="true" />
+            <element signature="e#489#490#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/ClientSocketWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="35" column="16" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7859#7877#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/aau/distributedsystems/master/Master.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="174" column="106" selection-start-line="174" selection-start-column="106" selection-end-line="174" selection-end-column="106" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

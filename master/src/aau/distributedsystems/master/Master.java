@@ -8,6 +8,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -22,6 +23,7 @@ public class Master {
             return;
         }
 
+        //parse the command line parameters
         int port = Integer.parseInt(args[0]);
         int maxSlaves = Integer.parseInt(args[1]);
         int connectionTimeout = Integer.parseInt(args[2]);
@@ -44,14 +46,19 @@ public class Master {
             //wait for all slaves to connect and create initialization Task for each one
             serverSocket.setSoTimeout(connectionTimeout*1000);
             try{
+                //accept incoming connections as long as the maxSlave number is not reached
+                //OR as long as the timeout is not expired
                 while(numberOfSlaves < maxSlaves) {
-
+                    //create a new clientSocket wrapper to remember the slave
                     ClientSocketWrapper clientSocket = new ClientSocketWrapper(serverSocket.accept(), executor);
                     numberOfSlaves++;
                     System.out.println(numberOfSlaves + " slave(s) connected...");
+
+                    //start a task where we wait for the slave to send its init message
                     initFutures.add(executor.submit(new SlaveInitTask(clientSocket)));
                 }
             } catch(SocketTimeoutException ste) {
+                //after the timout expired we either go with the slaves we got or shutdown if no slaves connected
                 System.out.println("Connection timeout expired...");
                 if(numberOfSlaves < 1) {
                     System.out.println("NO slaves connected within the defined timeout...");
@@ -60,11 +67,21 @@ public class Master {
                 }
             }
 
-
             //wait for each slave to send its initialize message
             ArrayList<ClientSocketWrapper> availableSlaves = new ArrayList<>();
             for (Future<ClientSocketWrapper> initTask: initFutures) {
-                availableSlaves.add(initTask.get());
+                try {
+                    availableSlaves.add(initTask.get());
+                } catch(Exception e) {
+                    System.out.println("Unable to get 'init' from slave...");
+                }
+            }
+
+            //if none of the connected slaves managed to send a initialize message shutdown
+            if(availableSlaves.size() == 0) {
+                System.out.println("None of the connected slaves was able to initialize...");
+                serverSocket.close();
+                return;
             }
 
             System.out.println("All connected slaves initialized...");
@@ -127,19 +144,22 @@ public class Master {
         List<ClientSocketWrapper> workingSlaves = new ArrayList<>();
         Iterator slaveIterator;
         //iterate through exercises and distribute them to the available slaves
-        //first perform all multiplications
         while(tasks.size() > 0) {
             MatrixBlockTuple exercise = tasks.get(0);
             tasks.remove(exercise);
 
-            //iterate through available slaves and distribute a task to the next available slave
+            //get the next available slave
             slaveIterator = availableSlaves.iterator();
             ClientSocketWrapper availableSlave = (ClientSocketWrapper) slaveIterator.next();
+
+            //distribute some work to the slave
             availableSlave.work(exercise, exerciseType);
+
+            //remove slave from available slaves and add it to the working slaves
             workingSlaves.add(availableSlave);
             availableSlaves.remove(availableSlave);
 
-            //if we ran out of available slaves, collect the calculated results
+            //if we ran out of available slaves, collect the calculated results from the working slaves
             if(availableSlaves.size() == 0 || tasks.size() == 0){
                 collectResults(workingSlaves, availableSlaves, results, tasks, slaveFailureTimeout);
             }
@@ -151,11 +171,13 @@ public class Master {
                                        List<ResultTuple> results,
                                        List<MatrixBlockTuple> notDoneTasks,
                                        int slaveFailureTimeout) {
+
+        //iterate through working slaves and also exile the slaves that where not able to deliver a result
         Iterator workingSlavesIterator = workingSlaves.iterator();
         List<ClientSocketWrapper> failedSlaves = new ArrayList<>();
         while(workingSlavesIterator.hasNext()) {
             ClientSocketWrapper workingSlave = (ClientSocketWrapper) workingSlavesIterator.next();
-            ResultTuple result = null;
+            ResultTuple result;
             try {
                 result = workingSlave.getResult(slaveFailureTimeout);
                 if(result != null) {
@@ -165,7 +187,7 @@ public class Master {
                 }
                 availableSlaves.add(workingSlave);
             } catch (Exception e) {
-                System.out.println("slave " + workingSlave.getSocketIdentifier() + " not able to deliver result;");
+                System.out.println("Slave " + workingSlave.getSocketIdentifier() + " not able to deliver result;");
                 notDoneTasks.add(workingSlave.getCurrentTask());
                 failedSlaves.add(workingSlave);
             }
@@ -177,11 +199,17 @@ public class Master {
 
 
     private static  List<MatrixBlockTuple> getMultiplicationTasks(int[][] matrixA, int[][] matrixB) {
+
+        //split the given matrices in 4x4 blocks each
+        //we could also do this step recursively until we have X 2x2 blocks and multiply those
+        //to distribute the work even better
+        //but for simplicity just split each one time
         List<MatrixBlock> blocksA = MatrixUtil.splitInBlocks(matrixA);
         List<MatrixBlock> blocksB = MatrixUtil.splitInBlocks(matrixB);
 
         //hardcoded multiplications
-        List<MatrixBlockTuple> tasks = new ArrayList<MatrixBlockTuple>();
+        List<MatrixBlockTuple> tasks = new ArrayList<>();
+
         //C11
         tasks.add(new MatrixBlockTuple(blocksA.get(0), blocksB.get(0), ResultMatrixPart.C11)); //a11 * b11
         tasks.add(new MatrixBlockTuple(blocksA.get(1), blocksB.get(2), ResultMatrixPart.C11)); //a12 * b21
@@ -202,6 +230,7 @@ public class Master {
     }
 
     private static List<MatrixBlockTuple> getAdditionTasks(List<ResultTuple> multiplicationResults) {
+        //after the multiplications, the blocks have to sum the matrices
         List<MatrixBlockTuple> additionTasks = new ArrayList<>();
         for(ResultMatrixPart part : ResultMatrixPart.values()) {
             List<ResultTuple> rT = multiplicationResults.stream().filter(t -> part.equals(t.getPart())).collect(Collectors.toList());
