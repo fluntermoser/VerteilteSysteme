@@ -10,6 +10,8 @@ If a slave fails to execute its task (for example if it shuts down), the task is
 ## Application Run
 To run the application(s) follow these steps: 
 - build all java files located in src folder
+- either use the provided script file (run.sh or run.bat)
+- OR run the programm manually as described in the following steps
 
 ### Master
 - go to folder: master\out\production\master_slave
@@ -19,7 +21,7 @@ To run the application(s) follow these steps:
 ### Slave
 - go to folder: master\out\production\master_slave
 - open command line
-- run: java aau.distributedsystems.slave.Slave server-address port-of-server
+- run: java aau.distributedsystems.slave.Slave server-address port-of-server unique-slave-id
 
 ## Params
 The master and the slave application can be configured using command line arguments:
@@ -33,3 +35,4 @@ The master and the slave application can be configured using command line argume
 ### Slave
 - server-address (the address of the server the slave tries to connect to)
 - port-of-server (the port of the server the slave tries to connect to)
+- unique-slave-id (the unique id of each slave)
